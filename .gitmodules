@@ -1,0 +1,6 @@
+[submodule "JUCE"]
+	path = JUCE
+	url = https://github.com/juce-framework/JUCE
+[submodule "dwm-ma"]
+	path = dwm-ma
+	url = https://github.com/J0ySF/dwm-ma

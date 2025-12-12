@@ -1,0 +1,73 @@
+{
+  "Name": "MA_CONFIG_8_POINTS_SQRT_3",
+  "Description": "dwm-ma MA_CONFIG_8_POINTS_SQRT_3 layout",
+  "GenericLayout": {
+    "Name": "Sensor Directions",
+    "Elements": [
+      {
+        "Azimuth": 135,
+        "Elevation": -35.2644,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 1,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -135,
+        "Elevation": -35.2644,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 2,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 135,
+        "Elevation": 35.2644,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 3,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -135,
+        "Elevation": 35.2644,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 4,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 45,
+        "Elevation": -35.2644,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 5,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -45,
+        "Elevation": -35.2644,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 6,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 45,
+        "Elevation": 35.2644,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 7,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -45,
+        "Elevation": 35.2644,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 8,
+        "Gain": 1.0
+      }
+    ]
+  }
+}

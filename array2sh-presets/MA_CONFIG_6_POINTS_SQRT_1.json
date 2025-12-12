@@ -1,0 +1,57 @@
+{
+  "Name": "MA_CONFIG_6_POINTS_SQRT_1",
+  "Description": "dwm-ma MA_CONFIG_6_POINTS_SQRT_1 layout",
+  "GenericLayout": {
+    "Name": "Sensor Directions",
+    "Elements": [
+      {
+        "Azimuth": -180,
+        "Elevation": 0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 1,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -0,
+        "Elevation": -90,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 2,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 90,
+        "Elevation": 0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 3,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -90,
+        "Elevation": 0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 4,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -0,
+        "Elevation": 90,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 5,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -0,
+        "Elevation": 0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 6,
+        "Gain": 1.0
+      }
+    ]
+  }
+}

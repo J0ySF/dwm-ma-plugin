@@ -1,0 +1,201 @@
+{
+  "Name": "MA_CONFIG_24_POINTS_SQRT_11",
+  "Description": "dwm-ma MA_CONFIG_24_POINTS_SQRT_11 layout",
+  "GenericLayout": {
+    "Name": "Sensor Directions",
+    "Elements": [
+      {
+        "Azimuth": 161.565,
+        "Elevation": -17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 1,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -161.565,
+        "Elevation": -17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 2,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 161.565,
+        "Elevation": 17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 3,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -161.565,
+        "Elevation": 17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 4,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 135,
+        "Elevation": -64.7606,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 5,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -135,
+        "Elevation": -64.7606,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 6,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 108.435,
+        "Elevation": -17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 7,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -108.435,
+        "Elevation": -17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 8,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 108.435,
+        "Elevation": 17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 9,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -108.435,
+        "Elevation": 17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 10,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 135,
+        "Elevation": 64.7606,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 11,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -135,
+        "Elevation": 64.7606,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 12,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 45,
+        "Elevation": -64.7606,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 13,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -45,
+        "Elevation": -64.7606,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 14,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 71.5651,
+        "Elevation": -17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 15,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -71.5651,
+        "Elevation": -17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 16,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 71.5651,
+        "Elevation": 17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 17,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -71.5651,
+        "Elevation": 17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 18,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 45,
+        "Elevation": 64.7606,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 19,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -45,
+        "Elevation": 64.7606,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 20,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 18.4349,
+        "Elevation": -17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 21,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -18.4349,
+        "Elevation": -17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 22,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 18.4349,
+        "Elevation": 17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 23,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -18.4349,
+        "Elevation": 17.5484,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 24,
+        "Gain": 1.0
+      }
+    ]
+  }
+}

@@ -43,8 +43,6 @@ class plugin_processor final : public juce::AudioProcessor {
     const juce::StringArray ma_config_choices = juce::StringArray{
             "6_POINTS_SQRT_1",   "8_POINTS_SQRT_3",   "12_POINTS_SQRT_2",  "24_POINTS_SQRT_5", "24_POINTS_SQRT_6",
             "24_POINTS_SQRT_10", "24_POINTS_SQRT_11", "24_POINTS_SQRT_13", "30_POINTS_SQRT_9",
-            // TODO: investigate the anomalous behavior of 48_POINTS_SQRT_14
-            //"48_POINTS_SQRT_14",
     };
 
     /**

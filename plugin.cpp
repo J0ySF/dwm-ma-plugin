@@ -2,6 +2,8 @@ extern "C" {
 #include <dwm_ma.h>
 }
 
+#include <ambi_bin.h>
+#include <array2sh.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 
 class plugin_processor final : public juce::AudioProcessor {
@@ -50,12 +52,62 @@ class plugin_processor final : public juce::AudioProcessor {
      */
     const float bounds_params[6][2] = {{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}};
 
+    /**
+     * Reconfigure everything
+     */
+    void reconfigure(const MA_CONFIG ma_conf) {
+        dwm_ma_init(dwm_ma, bounds_params, true);
+
+        const ma_layout *layout = ma_config_layout(ma_conf);
+        SH_ORDERS order;
+        if (layout->channel_count >= 25) {
+            order = SH_ORDER_FOURTH;
+            ambi_channel_count = 25;
+        } else if (layout->channel_count >= 16) {
+            order = SH_ORDER_THIRD;
+            ambi_channel_count = 16;
+        } else if (layout->channel_count >= 9) {
+            order = SH_ORDER_SECOND;
+            ambi_channel_count = 9;
+        } else {
+            order = SH_ORDER_FIRST;
+            ambi_channel_count = 4;
+        }
+
+        array2sh_init(array2sh, DWM_MA_SAMPLE_RATE);
+        array2sh_setArrayType(array2sh, ARRAY_SPHERICAL);
+        array2sh_setNumSensors(array2sh, DWM_MA_MAX_OUTPUT_COUNT);
+        for (int i = 0; i < layout->channel_count; i++) {
+            array2sh_setSensorAzi_rad(array2sh, i, layout->mic_azi_elev[i][0]);
+            array2sh_setSensorElev_rad(array2sh, i, layout->mic_azi_elev[i][1]);
+        }
+        array2sh_setNormType(ambi_bin, NORM_SN3D);
+        array2sh_setc(array2sh, 343.0f);
+        array2sh_setChOrder(array2sh, CH_ACN);
+        array2sh_setEncodingOrder(array2sh, order);
+        array2sh_setWeightType(array2sh, WEIGHT_OPEN_OMNI);
+        array2sh_setr(array2sh, layout->radius_m);
+        array2sh_setRegPar(array2sh, 15.0f);
+        array2sh_setGain(array2sh, 0.0f);
+
+        ambi_bin_init(ambi_bin, DWM_MA_SAMPLE_RATE);
+        ambi_bin_setNormType(ambi_bin, NORM_SN3D);
+        ambi_bin_setChOrder(ambi_bin, CH_ACN);
+        ambi_bin_setDecodingMethod(ambi_bin, DECODING_METHOD_MAGLS);
+        ambi_bin_setHRIRsPreProc(ambi_bin, HRIR_PREPROC_EQ);
+        ambi_bin_setInputOrderPreset(ambi_bin, order);
+        ambi_bin_initCodec(ambi_bin);
+
+        prev_config = ma_conf;
+        reset = false;
+    }
+
 public:
     plugin_processor() :
         AudioProcessor(
                 BusesProperties()
                         .withInput("Input", juce::AudioChannelSet::discreteChannels(DWM_MA_MAX_INPUT_COUNT), true)
-                        .withOutput("Output", juce::AudioChannelSet::discreteChannels(DWM_MA_MAX_OUTPUT_COUNT), true)) {
+                        .withOutput("Output", juce::AudioChannelSet::discreteChannels(2), true)) {
         // Create mic array output parameters
         const auto ma_name = "Mic Array";
         {
@@ -77,8 +129,9 @@ public:
 
         // Instantiate and initialize the dwm-ma instance
         dwm_ma_create(&dwm_ma);
-        dwm_ma_init(dwm_ma, bounds_params, true);
-        reset = false;
+        array2sh_create(&array2sh);
+        ambi_bin_create(&ambi_bin);
+        reconfigure(MA_CONFIG_6_POINTS_SQRT_1);
     }
 
     ~plugin_processor() override {
@@ -99,8 +152,7 @@ public:
     void releaseResources() override {}
 
     bool isBusesLayoutSupported(const BusesLayout &layouts) const override {
-        return layouts.getMainInputChannels() == DWM_MA_MAX_INPUT_COUNT &&
-               layouts.getMainOutputChannels() == DWM_MA_MAX_OUTPUT_COUNT;
+        return layouts.getMainInputChannels() == DWM_MA_MAX_INPUT_COUNT && layouts.getMainOutputChannels() == 2;
     }
 
     using AudioProcessor::processBlock;
@@ -111,18 +163,19 @@ public:
         // the required specs, clear all output channels and stop the simulation
         if (DWM_MA_SAMPLE_RATE != static_cast<int>(getSampleRate()) ||
             DWM_MA_BUFFER_SIZE != juce_buffer.getNumSamples() || getTotalNumInputChannels() < DWM_MA_MAX_INPUT_COUNT ||
-            getTotalNumOutputChannels() < DWM_MA_MAX_OUTPUT_COUNT) {
+            getTotalNumOutputChannels() < 2) {
             reset = true;
             for (auto i = 0; i < getTotalNumOutputChannels(); i++)
                 juce_buffer.clear(i, 0, juce_buffer.getNumSamples());
             return;
         }
 
+        // TODO: ???
+
         // Handle situations where the simulation needs to restart
-        if (reset) {
-            dwm_ma_init(dwm_ma, bounds_params, true);
-            reset = false;
-        }
+        const auto out_config = static_cast<MA_CONFIG>(ma_config->getIndex() + 2); // Skip mono and stereo
+        if (reset || out_config != prev_config)
+            reconfigure(out_config);
         // Buffers shared for both input and output
         float *const *buffers = juce_buffer.getArrayOfWritePointers();
 
@@ -143,20 +196,30 @@ public:
         }
 
         // Handle output information
-        const auto out_config = static_cast<MA_CONFIG>(ma_config->getIndex() + 2); // Skip mono and stereo
-        const ma_layout *out_layout = ma_config_layout(out_config);
+        const ma_layout *layout = ma_config_layout(out_config);
         float output_position[3];
         output_position[0] = ma_pos[0]->get();
         output_position[1] = ma_pos[1]->get();
         output_position[2] = ma_pos[2]->get();
 
+        // Intermediate buffers
+        float ma_buffer[DWM_MA_MAX_OUTPUT_COUNT][DWM_MA_BUFFER_SIZE];
+        float *ma_buffer_ptr[DWM_MA_MAX_OUTPUT_COUNT];
+        float ambi_buffer[DWM_MA_MAX_OUTPUT_COUNT][DWM_MA_BUFFER_SIZE];
+        float *ambi_buffer_ptr[DWM_MA_MAX_OUTPUT_COUNT];
+        for (int i = 0; i < DWM_MA_MAX_OUTPUT_COUNT; i++) {
+            ma_buffer_ptr[i] = ma_buffer[i];
+            ambi_buffer_ptr[i] = ambi_buffer[i];
+        }
+
         // Batch process all DWM_MA_BUFFER_SIZE simulation steps
         dwm_ma_process_interpolated(dwm_ma, input_buffers, input_positions_ptr, input_active_counter, out_config, 1.0f,
-                                    buffers, output_position);
+                                    ma_buffer_ptr, output_position);
 
-        // Mute all unused output channels
-        for (int i = out_layout->channel_count; i < DWM_MA_MAX_OUTPUT_COUNT; i++)
-            juce_buffer.clear(i, 0, DWM_MA_BUFFER_SIZE);
+        // Convert from mic array to ambisonics
+        array2sh_process(array2sh, ma_buffer_ptr, ambi_buffer_ptr, layout->channel_count, ambi_channel_count,
+                         DWM_MA_BUFFER_SIZE);
+        ambi_bin_process(ambi_bin, ambi_buffer_ptr, buffers, ambi_channel_count, 2, DWM_MA_BUFFER_SIZE);
     }
 
     double getTailLengthSeconds() const override { return 0.0; }
@@ -194,7 +257,11 @@ private:
     juce::AudioParameterBool *input_enabled[DWM_MA_MAX_INPUT_COUNT];
     juce::AudioParameterFloat *input_pos[DWM_MA_MAX_INPUT_COUNT][3];
 
-    void *dwm_ma;
+    void *dwm_ma{};
+    void *array2sh{};
+    void *ambi_bin{};
+    MA_CONFIG prev_config;
+    int ambi_channel_count;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(plugin_processor)
 };
